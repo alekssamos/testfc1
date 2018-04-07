@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="">
+	<head>
+		<meta charset="UTF-8">
+		<title>TEST</title>
+		<style type="text/css">
+h1, .nextbtn, .finishbtn {
+	display: block;
+	text-align: center;
+}
+		</style>
+	</head>
+	
+	<body onbeforeunload="return 'Вы уверены? Результат не сохранится';">
+	<h1>Тест по компьютерам</h1>
+	<p><a href="./test_on_HTML_and_JAVASCRIPT.hta">Скачать MS HTA версию</a></p>
+	<p>
+Это пример HTML формы с обработчиком Javascript.<br>
+Вообще, из-за того, что это клиентский код и его исходник, а значит правильные ответы и все остальное можно посмотреть в любом браузере, тесты, а также всякие пароли и т.д. рекомендуется делать на серверном языке, например, PHP, но для обучения (для школы, чтобы показать, так я умею, конечно же) можно оставить и так. Я это знаю (а то мало ли "профессионал" захочет об этом сказать).
+	</p>
+	<hr>
+	<form>
+		<div id="test1"></div>
+	<script type="text/javascript">
+var te = document.getElementById("test1");
+var bals = 0, cq = 0
+function get_next(){
+	cq += 1;
+	go();
+}
+function check_result(selectedvariant, correctvariant){
+	if (selectedvariant == correctvariant) {
+		bals += data[cq]["plusbals"];
+		return true;
+	}
+	return false;
+}
+function get_result(){
+	te.innerHTML = "Ваша оценка: <b>" + bals.toString() + "</b>";
+}
+function onnextbtn(){
+	var elems = document.getElementsByName("q"+cq);
+	for (var k = 0; k < elems.length; k++){
+		if (elems[k].checked == 1) {
+			check_result(elems[k].value, data[cq]["correct"]);
+		}
+	}
+	if (cq == data.length - 1){ /* если это последний вопрос, то получаем результат */
+		get_result();
+	} else { /* показываем следующий вопрос */
+		get_next();
+	}
+}
+/* делаем базу вопросов и ответов */
+/* 0,1,2... элементы в массиве считаются с нуля */
+var data = [
+	{"question": "1. Какое устройство является основой компьютера?", "variants":["мышь", "оперативная память", "материнская плата"], "correct":2, "plusbals":1},
+	{"question": "2. Для чего предназначен монитор?", "variants":["для ввода визуальной информации", "для форматирования текста", "для вывода визуальной информации"], "correct":2, "plusbals":1},
+	{"question": "3. Процессор – это ..?", "variants":["'мозг' компьютера, он выполняет обработку информации", "'память' компьютера, хранит всю информацию на компьютере", "устройство для ввода алфавитно-цифровой информации"], "correct":0,"plusbals":1},
+	{"question": "4. Винчестер служит для?", "variants":["для обработки информации", "для долговременного хранения больших объёмов информации", "для хранения информации только во время работы компьютера"], "correct":1,"plusbals":1},
+	{"question": " графической информации перед выводом на экран (особенно оно важно для игр)?", "variants":["монитор", "видеокарта", "графический редактор"], "correct":1,"plusbals":1}
+];
+function go(){
+	te.innerHTML = '<div>' + data[cq]["question"] + '</div>';
+	for (var i = 0; i < data[cq]["variants"].length; i++){
+		te.innerHTML += '<label><input type="radio" name="q'+cq+'" value="' + i + '"> ' + data[cq]["variants"][i] + '</label><br>'
+	}
+	te.innerHTML += '</div>';
+	if (cq == data.length - 1) { /* если тест завершен */
+			te.innerHTML += '<input type="button" class="finishbtn" value="Результат" onclick="onnextbtn(); return false;">';
+	} else { /* тест продолжается */
+			te.innerHTML += '<input type="button" class="nextbtn" value="Далее" onclick="onnextbtn(); return false;">';
+	}
+}
+go();
+	</script>
+	</form>
+	<footer>&copy; 2018 Леха программист из 12 класса! Типа для информатики!</footer>
+	</body>
+</html>
