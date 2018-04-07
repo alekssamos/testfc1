@@ -1,21 +1,36 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="ru">
 	<head>
 		<meta charset="UTF-8">
+		<!-- mobile -->
+		<!-- для корректного отображения на мобильных телефонах и планшетах -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="HandheldFriendly" content="True">
+		<!-- /mobile -->
 		<title>TEST</title>
 		<style type="text/css">
 h1, .nextbtn, .finishbtn {
 	display: block;
 	text-align: center;
 }
+.oka {
+	color: green; /* правильные ответы зеленым */
+}
+.errora {
+	color: red; /* неверные ответы красным */
+}
 		</style>
 	</head>
 	
 	<body onbeforeunload="return 'Вы уверены? Результат не сохранится';">
 	<h1>Тест по компьютерам</h1>
-	<p>
+	<p><a target="_blank" href="./test_on_HTML_and_JAVASCRIPT.html">Перейти к онлайн браузерной версии</a></p>
+	<p><a id="note1linkshow" href="#" onclick="document.getElementById('note1').style.display='block'; return false;">примечание</a></p>
+	<p id="note1" style="display:none;">
 Это пример HTML формы с обработчиком Javascript.<br>
 Вообще, из-за того, что это клиентский код и его исходник, а значит правильные ответы и все остальное можно посмотреть в любом браузере, тесты, а также всякие пароли и т.д. рекомендуется делать на серверном языке, например, PHP, но для обучения (для школы, чтобы показать, так я умею, конечно же) можно оставить и так. Я это знаю (а то мало ли "профессионал" захочет об этом сказать).
+<a id="note1linkhide" style="display:block;" href="#" onclick="document.getElementById('note1').style.display='none'; return false;">убрать</a>
 	</p>
 	<hr>
 	<form>
@@ -23,6 +38,7 @@ h1, .nextbtn, .finishbtn {
 	<script type="text/javascript">
 var te = document.getElementById("test1");
 var bals = 0, cq = 0
+var errorstxt = "";
 function get_next(){
 	cq += 1;
 	go();
@@ -32,10 +48,13 @@ function check_result(selectedvariant, correctvariant){
 		bals += data[cq]["plusbals"];
 		return true;
 	}
+	errorstxt += '<i>Вопрос</i>: <b>'+ data[cq]["question"] +'</b><br>';
+	errorstxt += '<small><i>Ваш ответ</i>:</small> <span class="errora">'+ data[cq]["variants"][selectedvariant] +'</span><br>'
+	errorstxt += '<small><i>Правильный ответ</i>:</small> <span class="oka">'+ data[cq]["variants"][correctvariant] +'</span><br><br>'
 	return false;
 }
 function get_result(){
-	te.innerHTML = "Ваша оценка: <b>" + bals.toString() + "</b>";
+	te.innerHTML = "<big> Ваша оценка: <b>" + bals.toString() + "</b> </big><br>" + errorstxt;
 }
 function onnextbtn(){
 	var elems = document.getElementsByName("q"+cq);
@@ -62,13 +81,13 @@ var data = [
 function go(){
 	te.innerHTML = '<div>' + data[cq]["question"] + '</div>';
 	for (var i = 0; i < data[cq]["variants"].length; i++){
-		te.innerHTML += '<label><input type="radio" name="q'+cq+'" value="' + i + '"> ' + data[cq]["variants"][i] + '</label><br>'
+		te.innerHTML += '<label><input type="radio" name="q'+cq+'" value="' + i + '" onclick="onnextbtn();"> ' + data[cq]["variants"][i] + '</label><br>'
 	}
 	te.innerHTML += '</div>';
 	if (cq == data.length - 1) { /* если тест завершен */
-			te.innerHTML += '<input type="button" class="finishbtn" value="Результат" onclick="onnextbtn(); return false;">';
+			/* te.innerHTML += '<input type="button" class="finishbtn" value="Результат" onclick="onnextbtn(); return false;">'; */
 	} else { /* тест продолжается */
-			te.innerHTML += '<input type="button" class="nextbtn" value="Далее" onclick="onnextbtn(); return false;">';
+			/* te.innerHTML += '<input type="button" class="nextbtn" value="Далее" onclick="onnextbtn(); return false;">'; */
 	}
 }
 go();
