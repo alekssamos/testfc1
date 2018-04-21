@@ -15,25 +15,29 @@ h1, .nextbtn, .finishbtn {
 	text-align: center;
 }
 .oka {
-	color: green; /* правильные ответы зеленым */
+	color: green !important; /* правильные ответы зеленым */
 }
 .errora {
-	color: red; /* неверные ответы красным */
+	color: red !important; /* неверные ответы красным */
+}
+.testbox {
+	text-align: center;
 }
 		</style>
 	</head>
 	
 	<body onbeforeunload="return 'Вы уверены? Результат не сохранится';">
-	<h1>Тест по компьютерам</h1>
-	<p><a target="_blank" href="./test_on_HTML_and_JAVASCRIPT.hta">Скачать MS HTA версию</a></p>
-	<p><a id="note1linkshow" href="#" onclick="document.getElementById('note1').style.display='block'; return false;">примечание</a></p>
-	<p id="note1" style="display:none;">
-Это пример HTML формы с обработчиком Javascript.<br>
-Вообще, из-за того, что это клиентский код и его исходник, а значит правильные ответы и все остальное можно посмотреть в любом браузере, тесты, а также всякие пароли и т.д. рекомендуется делать на серверном языке, например, PHP, но для обучения (для школы, чтобы показать, так я умею, конечно же) можно оставить и так. Я это знаю (а то мало ли "профессионал" захочет об этом сказать).
-<a id="note1linkhide" style="display:block;" href="#" onclick="document.getElementById('note1').style.display='none'; return false;">убрать</a>
-	</p>
-	<hr>
-	<form>
+	<br>
+	<h1 style="color:orange;">Тест по компьютерам</h1>
+	<br>
+	<!-- <p><a id="note1linkshow" href="#" onclick="document.getElementById('note1').style.display='block'; return false;">примечание</a></p> -->
+	<!-- <p id="note1" style="display:none;"> -->
+<!-- Это пример HTML формы с обработчиком Javascript.<br> -->
+<!-- Вообще, из-за того, что это клиентский код и его исходник, а значит правильные ответы и все остальное можно посмотреть в любом браузере, тесты, а также всякие пароли и т.д. рекомендуется делать на серверном языке, например, PHP, но для обучения (для школы, чтобы показать, так я умею, конечно же) можно оставить и так. Я это знаю (а то мало ли "профессионал" захочет об этом сказать). -->
+<!-- <a id="note1linkhide" style="display:block;" href="#" onclick="document.getElementById('note1').style.display='none'; return false;">убрать</a> -->
+	<!-- </p> -->
+	<!-- <hr> -->
+	<div class="testbox"><form>
 		<div id="test1"></div>
 	<script type="text/javascript">
 var te = document.getElementById("test1");
@@ -41,7 +45,16 @@ var bals = 0, cq = 0
 var errorstxt = "";
 function get_next(){
 	cq += 1;
-	go();
+	window.setTimeout(go, 600);
+	/*
+	хотел сделать анимацию появления / скрытия через JQuery,
+	но подумал, что ради одной строчки
+	ее подключать будет затратно.
+	Вручную - много лишнего кода.
+	Пока обойдемся так,
+	если будет нужно, так сказать, красивее,
+	то сделаю.
+	*/
 }
 function check_result(selectedvariant, correctvariant){
 	if (selectedvariant == correctvariant) {
@@ -62,9 +75,23 @@ function onnextbtn(){
 		if (elems[k].checked == 1) {
 			check_result(elems[k].value, data[cq]["correct"]);
 		}
+	elems[k].disabled = 1; /* фиксируем ответ после нажатия */
 	}
 	if (cq == data.length - 1){ /* если это последний вопрос, то получаем результат */
 		get_result();
+		/* просили звук в конце? держите! */
+		try {
+			var audioelem = document.createElement("audio");
+			sourcefiles = ["Media_Calligraphy_Windows_Logon_Sound.mp3",
+				"Media_Calligraphy_Windows_Logon_Sound.ogg", "Media_Calligraphy_Windows_Logon_Sound.wav"];
+			for (var i = 0; i < sourcefiles.length; i++){
+				var sourceelem1 = document.createElement("source");
+				sourceelem1.src = sourcefiles[i];
+				audioelem.appendChild(sourceelem1);
+			}
+			document.body.appendChild(audioelem);
+			audioelem.play();
+		} catch(er) {}
 	} else { /* показываем следующий вопрос */
 		get_next();
 	}
@@ -72,11 +99,11 @@ function onnextbtn(){
 /* делаем базу вопросов и ответов */
 /* 0,1,2... элементы в массиве считаются с нуля */
 var data = [
-	{"question": "1. Какое устройство является основой компьютера?", "variants":["мышь", "оперативная память", "материнская плата"], "correct":2, "plusbals":1},
-	{"question": "2. Для чего предназначен монитор?", "variants":["для ввода визуальной информации", "для форматирования текста", "для вывода визуальной информации"], "correct":2, "plusbals":1},
-	{"question": "3. Процессор – это ..?", "variants":["'мозг' компьютера, он выполняет обработку информации", "'память' компьютера, хранит всю информацию на компьютере", "устройство для ввода алфавитно-цифровой информации"], "correct":0,"plusbals":1},
-	{"question": "4. Винчестер служит для?", "variants":["для обработки информации", "для долговременного хранения больших объёмов информации", "для хранения информации только во время работы компьютера"], "correct":1,"plusbals":1},
-	{"question": "5. Какое устройство специально предназначено для обработки графической информации перед выводом на экран (особенно оно важно для игр)?", "variants":["монитор", "видеокарта", "графический редактор"], "correct":1,"plusbals":1}
+	{"question": "<span style=\"color:maroon;\">1. Какое устройство является основой компьютера?</span>", "variants":["<span style=\"color:orange;\">мышь</span>", "<span style=\"color:orange;\">оперативная память</span>", "<span style=\"color:orange;\">материнская плата</span>"], "correct":2, "plusbals":1},
+	{"question": "<span style=\"color:yellow;\">2. Для чего предназначен монитор?</span>", "variants":["<span style=\"color:olive;\">для ввода визуальной информации</span>", "<span style=\"color:olive;\">для форматирования текста</span>", "<span style=\"color:olive;\">для вывода визуальной информации</span>"], "correct":2, "plusbals":1},
+	{"question": "<span style=\"color:lime;\">3. Процессор – это ..?</span>", "variants":["<span style=\"color:aqua;\">'мозг' компьютера, он выполняет обработку информации</span>", "<span style=\"color:aqua;\">'память' компьютера, хранит всю информацию на компьютере</span>", "<span style=\"color:aqua;\">устройство для ввода алфавитно-цифровой информации</span>"], "correct":0,"plusbals":1},
+	{"question": "<span style=\"color:fuchsia;\">4. Винчестер служит для?</span>", "variants":["<span style=\"color:purple;\">для обработки информации</span>", "<span style=\"color:purple;\">для долговременного хранения больших объёмов информации</span>", "<span style=\"color:purple;\">для хранения информации только во время работы компьютера</span>"], "correct":1,"plusbals":1},
+	{"question": "<span style=\"color:navy;\">5. Какое устройство специально предназначено для обработки графической информации перед выводом на экран (особенно оно важно для игр)?</span>", "variants":["<span style=\"color:teal;\">монитор</span>", "<span style=\"color:teal;\">видеокарта</span>", "<span style=\"color:teal;\">графический редактор</span>"], "correct":1,"plusbals":1}
 ];
 function go(){
 	te.innerHTML = '<div>' + data[cq]["question"] + '</div>';
@@ -92,7 +119,7 @@ function go(){
 }
 go();
 	</script>
-	</form>
-	<footer>&copy; 2018 Леха программист из 12 класса! Типа для информатики!</footer>
+	</form></div>
+	<!-- <footer>&copy; 2018 Леха программист из 12 класса! Типа для информатики!</footer> -->
 	</body>
 </html>
